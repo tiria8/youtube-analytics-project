@@ -28,31 +28,37 @@ class Channel:
     def title(self):
         channel_info = self.get_info()
         self.title = channel_info['items']['snippet']['title']
+        return self.title
 
     @property
     def description(self):
         channel_info = self.get_info()
         self.description = channel_info['items']['snippet']['description']
+        return self.description
 
     @property
     def url(self):
         channel_info = self.get_info()
         self.url = channel_info['items']['snippet']['thumbnails']['url']
+        return self.url
 
     @property
     def subscriber_count(self):
         channel_info = self.get_info()
         self.subscriber_count = channel_info['items']['statistics']['subscriberCount']
+        return self.subscriber_count
 
     @property
     def video_count(self):
         channel_info = self.get_info()
         self.video_count = channel_info['items']['statistics']['videoCount']
+        return self.video_count
 
     @property
     def view_count(self):
         channel_info = self.get_info()
         self.view_count = channel_info['items']['statistics']['viewCount']
+        return self.view_count
 
     @classmethod
     def get_service(cls):
