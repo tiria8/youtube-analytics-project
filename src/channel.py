@@ -12,53 +12,51 @@ class Channel:
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала."""
 
-        self.channel_id = channel_id
+        self.__channel_id = channel_id
 
     def get_info(self):
-        channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics')
+        channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics')
         response = channel.execute()
-
         return response
+
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        info = self.get_info
-        print(json.dumps(info, indent=2, ensure_ascii=False))
+        data = self.get_info()
+        print(json.dumps(data, indent=2, ensure_ascii=False))
 
     @property
     def title(self):
         channel_info = self.get_info()
-        self.title = channel_info['items']['snippet']['title']
-        return self.title
+        title = channel_info['items'][0]['snippet']['title']
+        return title
 
     @property
     def description(self):
         channel_info = self.get_info()
-        self.description = channel_info['items']['snippet']['description']
-        return self.description
+        description = channel_info['items'][0]['snippet']['description']
+        return description
 
     @property
     def url(self):
-        channel_info = self.get_info()
-        self.url = channel_info['items']['snippet']['thumbnails']['url']
-        return self.url
+        return f"https://www.youtube.com/channel/{self.__channel_id}"
 
     @property
     def subscriber_count(self):
         channel_info = self.get_info()
-        self.subscriber_count = channel_info['items']['statistics']['subscriberCount']
-        return self.subscriber_count
+        subscriber_count = channel_info['items'][0]['statistics']['subscriberCount']
+        return subscriber_count
 
     @property
     def video_count(self):
         channel_info = self.get_info()
-        self.video_count = channel_info['items']['statistics']['videoCount']
-        return self.video_count
+        video_count = channel_info['items'][0]['statistics']['videoCount']
+        return video_count
 
     @property
     def view_count(self):
         channel_info = self.get_info()
-        self.view_count = channel_info['items']['statistics']['viewCount']
-        return self.view_count
+        view_count = channel_info['items'][0]['statistics']['viewCount']
+        return view_count
 
     @classmethod
     def get_service(cls):
@@ -67,7 +65,7 @@ class Channel:
     def to_json(self, filename):
         with open(filename, "w") as file:
             data = {
-                "id": self.channel_id,
+                "id": self.__channel_id,
                 "title": self.title,
                 "description": self.description,
                 "url": self.url,
