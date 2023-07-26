@@ -1,4 +1,5 @@
 import os
+import requests
 
 from googleapiclient.discovery import build
 
@@ -17,28 +18,46 @@ class Video:
     def get_info(self):
         video = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails', id=self.__video_id)
         response = video.execute()
+
         return response
 
     @property
     def title(self):
         video_info = self.get_info()
-        title = video_info['items'][0]['snippet']['title']
+        try:
+            title = video_info['items'][0]['snippet']['title']
+        except IndexError:
+            title = None
+
         return title
 
     @property
     def url(self):
-        return f"https://www.youtube.com/watch?v={self.__video_id}"
+        try:
+            url = f"https://www.youtube.com/watch?v={self.__video_id}"
+        except requests.get(url).status_code == 404:
+            url = None
+
+        return url
 
     @property
     def view_count(self):
         video_info = self.get_info()
-        view_count = video_info['items'][0]['statistics']['viewCount']
+        try:
+            view_count = video_info['items'][0]['statistics']['viewCount']
+        except IndexError:
+            view_count = None
+
         return view_count
 
     @property
     def like_count(self):
         video_info = self.get_info()
-        like_count = video_info['items'][0]['statistics']['likeCount']
+        try:
+            like_count = video_info['items'][0]['statistics']['likeCount']
+        except IndexError:
+            like_count = None
+
         return like_count
 
 
@@ -60,4 +79,3 @@ class PLVideo(Video):
             print('Видео не найдено')
 
         return self.get_info()
-
